@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+const FormularioMetricas = ({ onActualizar }) => {
+  const [form, setForm] = useState({ mes: '', conversiones: '', cpl: '', trafico: '' });
 
+  const enviarDatos = async (e) => {
+    e.preventDefault();
+    await fetch('https://backend-saas-marketing.onrender.com/api/metricas-manual/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    setForm({ mes: '', conversiones: '', cpl: '', trafico: '' });
+    onActualizar(); // Recarga la gráfica
+  };
+
+  return (
+    <form onSubmit={enviarDatos} className="bg-white p-6 rounded-xl shadow-lg mb-8 grid grid-cols-2 gap-4">
+      <input className="border p-2 rounded" placeholder="Mes (ej. Ago)" value={form.mes} onChange={e => setForm({...form, mes: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" placeholder="Conversiones" value={form.conversiones} onChange={e => setForm({...form, conversiones: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" step="0.01" placeholder="CPL ($)" value={form.cpl} onChange={e => setForm({...form, cpl: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" placeholder="Tráfico" value={form.trafico} onChange={e => setForm({...form, trafico: e.target.value})} required />
+      <button className="col-span-2 bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 transition">Guardar Nueva Métrica</button>
+    </form>
+  );
+};
+
+function App() {
+  // ... aquí va todo tu código actual (useState, useEffect, handleLogin, etc.)
 function App() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -112,80 +138,47 @@ const FormularioMetricas = ({ onActualizar }) => {
     setMensaje({ texto: '', tipo: '' })
   }
 
-// ==========================================
-  // PANTALLA 1: EL DASHBOARD (ACTUALIZADO CON FORMULARIO)
-  // ==========================================
-  if (estaAutenticado) {
+if (estaAutenticado) {
     return (
       <div className="min-h-screen bg-slate-50 flex">
-        {/* SIDEBAR LATERAL */}
         <aside className="w-64 bg-slate-900 text-white flex flex-col">
           <div className="p-6">
             <h2 className="text-2xl font-bold text-indigo-400">SaaS Analytics</h2>
-            <p className="text-slate-400 text-sm mt-1">Marketing & Finance</p>
           </div>
           <nav className="flex-1 px-4 space-y-2 mt-4">
             <a href="#" className="block px-4 py-3 bg-indigo-600 rounded-lg text-white font-medium">Resumen</a>
-            <a href="#" className="block px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-lg transition">Campañas</a>
-          </nav>
-          <div className="p-4">
             <button onClick={handleLogout} className="w-full text-left px-4 py-3 text-red-400 hover:bg-slate-800 rounded-lg transition font-medium">
               Cerrar Sesión
             </button>
-          </div>
+          </nav>
         </aside>
 
-        {/* CONTENIDO PRINCIPAL */}
         <main className="flex-1 p-8">
-          <header className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-slate-800">Panel de Control</h1>
-            <div className="text-sm font-medium text-slate-500 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200">
-              ID Agencia: 1
-            </div>
-          </header>
-
-          {/* TARJETAS SUPERIORES */}
+          <h1 className="text-3xl font-bold text-slate-800 mb-8">Resumen General</h1>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-              <h3 className="text-slate-500 font-semibold mb-1">Conversiones</h3>
-              <p className="text-3xl font-bold text-slate-800">{metricas.conversiones}</p>
-              <span className="text-indigo-500 text-sm font-medium">Actualizado en tiempo real</span>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-              <h3 className="text-slate-500 font-semibold mb-1">Costo por Lead (CPL)</h3>
-              <p className="text-3xl font-bold text-slate-800">{metricas.cpl}</p>
-              <span className="text-indigo-500 text-sm font-medium">Dato de BD</span>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-              <h3 className="text-slate-500 font-semibold mb-1">Tráfico Web</h3>
-              <p className="text-3xl font-bold text-slate-800">{metricas.trafico}</p>
-              <span className="text-indigo-500 text-sm font-medium">Dato de BD</span>
-            </div>
+             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+               <h3 className="text-slate-500 font-semibold mb-1">Conversiones</h3>
+               <p className="text-3xl font-bold text-slate-800">{metricas.conversiones}</p>
+             </div>
+             {/* ... repite para CPL y Tráfico ... */}
           </div>
 
-          {/* SECCIÓN DEL FORMULARIO */}
-          <section className="mb-8 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4">Añadir Nuevo Registro de Marketing</h3>
+          {/* AQUÍ LLAMAMOS AL NUEVO FORMULARIO */}
+          <section className="mb-8">
+            <h3 className="text-lg font-bold text-slate-800 mb-4">Registrar Nueva Métrica</h3>
             <FormularioMetricas onActualizar={obtenerDatosDelServidor} />
           </section>
 
-          {/* GRÁFICO REAL (Conectado a la Base de Datos) */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-6">Historial de Conversiones</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-6">Crecimiento Real</h3>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={metricas.grafico || []}>
-                  <defs>
-                    <linearGradient id="colorConvs" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="mes" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
+                  <XAxis dataKey="mes" />
+                  <YAxis />
                   <Tooltip />
-                  <Area type="monotone" dataKey="conversiones" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorConvs)" />
+                  <Area type="monotone" dataKey="conversiones" stroke="#4f46e5" fill="#4f46e5" fillOpacity={0.1} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
