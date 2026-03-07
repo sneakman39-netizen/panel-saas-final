@@ -23,7 +23,30 @@ function App() {
     { mes: 'Jun', conversiones: 1100 },
     { mes: 'Jul', conversiones: 1850 },
   ];
+const FormularioMetricas = ({ onActualizar }) => {
+  const [form, setForm] = useState({ mes: '', conversiones: '', cpl: '', trafico: '' });
 
+  const enviarDatos = async (e) => {
+    e.preventDefault();
+    await fetch('https://backend-saas-marketing.onrender.com/api/metricas-manual/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    setForm({ mes: '', conversiones: '', cpl: '', trafico: '' });
+    onActualizar(); // Esto recargará la gráfica automáticamente
+  };
+
+  return (
+    <form onSubmit={enviarDatos} className="bg-white p-6 rounded-xl shadow-lg mb-8 grid grid-cols-2 gap-4">
+      <input className="border p-2 rounded" placeholder="Mes (ej. Ago)" value={form.mes} onChange={e => setForm({...form, mes: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" placeholder="Conversiones" value={form.conversiones} onChange={e => setForm({...form, conversiones: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" step="0.01" placeholder="CPL ($)" value={form.cpl} onChange={e => setForm({...form, cpl: e.target.value})} required />
+      <input className="border p-2 rounded" type="number" placeholder="Tráfico" value={form.trafico} onChange={e => setForm({...form, trafico: e.target.value})} required />
+      <button className="col-span-2 bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 transition">Guardar Nueva Métrica</button>
+    </form>
+  );
+};
   useEffect(() => {
     const tokenGuardado = localStorage.getItem('token')
     if (tokenGuardado) {
