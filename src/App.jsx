@@ -39,7 +39,28 @@ const LandingPage = ({ alIrALogin }) => {
         </div>
       </section>
 
-      {/* Aquí podrías pegar el resto de tus secciones de Servicios, Nosotros, etc. */}
+      {<img src="https://weglobalconsulting.com/wp-content/uploads/2026/02/Logo_clean_website.png" alt="Global Consulting" class="h-14 md:h-20 w-auto cursor-pointer">                <div class="hidden md:flex space-x-8 items-center text-sm font-medium text-gray-500">
+                    <div class="hidden md:flex space-x-8 items-center text-sm font-medium text-gray-500">
+                    <a href="#inicio" class="hover:text-brand-text transition">Inicio</a>
+                    <a href="#servicios" class="hover:text-brand-text transition">Servicios</a>
+                    <a href="#nosotros" class="hover:text-brand-text transition">Nosotros</a>
+                    <a href="#contacto" class="hover:text-brand-text transition">Contacto</a>
+                    <div class="flex items-center space-x-2 border-l border-gray-200 pl-6 ml-2">
+    <a href="#" class="font-bold text-brand-text cursor-default">ES</a>
+    <span class="text-gray-300">|</span>
+    <a href="en.html" class="hover:text-brand-text transition">EN</a>
+</div>
+                    <a href="https://wa.me/19292245143" target="_blank" class="bg-brand-nav text-white px-6 py-2.5 rounded-full hover:bg-opacity-90 transition font-heading">
+                        Hablemos
+                    </a>
+                </div>
+                    <a href="https://wa.me/19292245143" target="_blank" class="bg-brand-nav text-white px-6 py-2.5 rounded-full hover:bg-opacity-90 transition font-heading">
+                        Hablemos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>}
       <section id="servicios" className="py-20 text-center px-6">
         <h2 className="text-3xl font-bold text-slate-800 mb-4">Nuestros Servicios</h2>
         <p className="text-slate-500 max-w-2xl mx-auto">Combinamos creatividad y análisis de datos.</p>
